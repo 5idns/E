@@ -31,13 +31,5 @@ pipeline {
                 workDirectory: './src/'
             }
         }
-        stage('Publish API') {
-            steps {
-                dotnetPublish configuration: 'EasyBot.Api',
-                outputDirectory: '../Publish/EasyBot.Api',
-                project: 'EasyBot.Api.csproj',
-                workDirectory: './EasyBot.Api'
-            }
-        }
     }
 }
