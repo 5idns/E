@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace E.Common.Security
+﻿namespace E.Common.Security
 { 
     public class Crc32
     {

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace E.Assembly
+﻿namespace E.Assembly
 {
     public class Class1
     {

@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\E.Enumeration\E.Enumeration.csproj" />
+  </ItemGroup>
+</Project>

@@ -51,7 +51,7 @@ namespace E.Common.Extensions
         /// <returns> 转化后的指定类型的对象，转化失败引发异常。 </returns>
         public static T CastTo<T>(this object value)
         {
-            if (value == null && default(T) == null)
+            if (value == null || default(T) == null)
             {
                 return default;
             }
