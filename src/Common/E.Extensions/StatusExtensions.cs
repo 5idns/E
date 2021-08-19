@@ -10,7 +10,6 @@ namespace E.Extensions
     {
         private static ConcurrentDictionary<long, StatusInfo> _status = new ConcurrentDictionary<long, StatusInfo>();
 
-        private static Func<long, ConcurrentDictionary<CultureInfo, string>> _lazyLoading;
         public static Func<long, ConcurrentDictionary<CultureInfo, string>> LazyLoading
         {
             get; set;
@@ -44,9 +43,9 @@ namespace E.Extensions
             {
                 statusInfo.Description = new ConcurrentDictionary<CultureInfo, string>();
             }
-            if (_lazyLoading != null)
+            if (LazyLoading != null)
             {
-                var descriptions = _lazyLoading(statusInfo.StatusCode);
+                var descriptions = LazyLoading(statusInfo.StatusCode);
                 if (descriptions != null && descriptions.Count > 0)
                 {
                     statusInfo.Description = descriptions;
