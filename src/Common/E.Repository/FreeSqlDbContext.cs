@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using E.Repository.Configurations;
 using FreeSql;
+using FreeSql.DataAnnotations;
 using Microsoft.Extensions.Configuration;
 
 namespace E.Repository
@@ -39,7 +41,7 @@ namespace E.Repository
         /// <returns></returns>
         public FreeSqlDbContext SyncStructure(params Type[] types)
         {
-            DbContext.SyncStructure(types);
+            DbContext.CodeFirst.SyncStructure(types);
             return this;
         }
 
@@ -50,13 +52,27 @@ namespace E.Repository
         /// <returns></returns>
         public FreeSqlDbContext SyncStructure<TEntity>()
         {
-            DbContext.SyncStructure<TEntity>();
+            DbContext.CodeFirst.SyncStructure<TEntity>();
             return this;
+        }
+
+        private static Type[] GetTypesByTableAttribute(Assembly[] assemblies)
+        {
+            List<Type> tableAssembies = new List<Type>();
+            foreach (Assembly assembly in assemblies)
+            foreach (Type type in assembly.GetExportedTypes())
+            foreach (Attribute attribute in type.GetCustomAttributes())
+                if (attribute is TableAttribute tableAttribute)
+                    if (tableAttribute.DisableSyncStructure == false)
+                        tableAssembies.Add(type);
+
+            return tableAssembies.ToArray();
         }
 
         public FreeSqlDbContext SyncStructure(params Assembly[] assemblies)
         {
-            DbContext.SyncStructure(assemblies);
+            var types = GetTypesByTableAttribute(assemblies);
+            DbContext.CodeFirst.SyncStructure(types);
             return this;
         }
     }
