@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using E.Enumeration;
+using E.Common.Enumeration;
 using E.Exceptions;
 
 namespace E.Repository.System

@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="Telegram.Bot" Version="16.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Tenant\E.Tenant\E.Tenant.csproj" />
+    <ProjectReference Include="..\E.Bots\E.Bots.csproj" />
+  </ItemGroup>
+</Project>

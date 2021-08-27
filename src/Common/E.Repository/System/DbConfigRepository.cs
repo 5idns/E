@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using E.Enumeration;
+using E.Common.Enumeration;
 using E.Exceptions;
 using E.Repository.System.Models;
 

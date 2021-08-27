@@ -6,8 +6,7 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using E.Enumeration;
-using E.Extensions;
+using E.Common.Enumeration;
 using E.Repository.Configurations;
 using E.Repository.System;
 using E.Repository.System.Models;
@@ -21,7 +20,8 @@ namespace E.Repository
     public static class RepositoryExtensions
     {
         public static IServiceCollection RegisterSystemDb(this IServiceCollection services,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            Action<Func<long, ConcurrentDictionary<CultureInfo, string>>> configStatusLazyLoading = null)
         {
             var dbOptions = configuration.GetSection("DbOptions:System").Get<DbOptions>();
             IFreeSql CreateFreeSql()
@@ -36,7 +36,6 @@ namespace E.Repository
             var freeSql = CreateFreeSql();
             var systemDbContext = new SystemDbContext(freeSql);
             services.AddSingleton(systemDbContext);
-
             try
             {
                 var dbConfigRepository = new DbConfigRepository(systemDbContext);
@@ -64,23 +63,24 @@ namespace E.Repository
             try
             {
                 var statusInfoRepository = new StatusInfoRepository(systemDbContext);
-
-                ConcurrentDictionary<CultureInfo, string> Func(long statusCode)
+                services.RegisterRepository<StatusInfoRepository>();
+                if (configStatusLazyLoading != null)
                 {
-                    var statusInfos = statusInfoRepository.GetAll(statusCode);
-                    var dictionary = new ConcurrentDictionary<CultureInfo, string>();
-                    foreach (var statusInfo in statusInfos)
+                    ConcurrentDictionary<CultureInfo, string> Func(long statusCode)
                     {
-                        CultureInfo cultureInfo = CultureInfo.GetCultureInfo(statusInfo.Culture);
-                        dictionary.TryAdd(cultureInfo, statusInfo.Description);
+                        var statusInfos = statusInfoRepository.GetAll(statusCode);
+                        var dictionary = new ConcurrentDictionary<CultureInfo, string>();
+                        foreach (var statusInfo in statusInfos)
+                        {
+                            CultureInfo cultureInfo = CultureInfo.GetCultureInfo(statusInfo.Culture);
+                            dictionary.TryAdd(cultureInfo, statusInfo.Description);
+                        }
+
+                        return dictionary;
                     }
 
-                    return dictionary;
+                    configStatusLazyLoading(Func);
                 }
-
-                StatusExtensions.LazyLoading = Func;
-                //var dbConfigs = statusInfoRepository.GetAll();
-                services.RegisterRepository<StatusInfoRepository>();
             }
             catch (Exception e)
             {
@@ -102,7 +102,7 @@ namespace E.Repository
             IConfiguration configuration,string section = "DbOptions:System")
             where TDbContext : FreeSqlDbContext,new()
         {
-            var dbOptions = configuration.GetSection("DbOptions:System").Get<DbOptions>();
+            var dbOptions = configuration.GetSection(section).Get<DbOptions>();
             IFreeSql CreateFreeSql()
             {
                 var newFreeSql = new FreeSqlBuilder().UseConnectionString(dbOptions.DataType, dbOptions.ConnectionString)
@@ -113,7 +113,10 @@ namespace E.Repository
             }
             var freeSql = CreateFreeSql();
             var dbContext = (TDbContext)Activator.CreateInstance(typeof(TDbContext), freeSql);
-            services.AddSingleton(dbContext);
+            if (dbContext != null)
+            {
+                services.AddSingleton(dbContext);
+            }
             return services;
         }
 
@@ -127,6 +130,7 @@ namespace E.Repository
                 newFreeSql.UseJsonMap();
                 return newFreeSql;
             }
+            
             var freeSql = CreateFreeSql();
             var dbContext = (FreeSqlDbContext)Activator.CreateInstance(dbConfig.DbContextType, freeSql);
             return dbContext;

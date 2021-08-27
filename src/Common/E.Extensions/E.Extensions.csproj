@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Repository\E.Repository.System.Models\E.Repository.System.Models.csproj" />
     <ProjectReference Include="..\E.Common\E.Common.csproj" />
     <ProjectReference Include="..\E.Entities\E.Entities.csproj" />
   </ItemGroup>

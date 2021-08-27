@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Globalization;
-using E.Enumeration;
+using E.Common.Enumeration;
 
 namespace E.Entities
 {

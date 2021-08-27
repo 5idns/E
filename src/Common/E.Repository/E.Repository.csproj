@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <PackageReference Include="FreeSql.DbContext" Version="2.5.200" />
     <PackageReference Include="FreeSql.Extensions.JsonMap" Version="2.5.200" />
@@ -8,9 +8,8 @@
     <PackageReference Include="IdleBus" Version="1.5.2" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\E.Entities\E.Entities.csproj" />
-    <ProjectReference Include="..\E.Enumeration\E.Enumeration.csproj" />
+    <ProjectReference Include="..\..\Repository\E.Repository.System.Models\E.Repository.System.Models.csproj" />
+    <ProjectReference Include="..\E.Common\E.Common.csproj" />
     <ProjectReference Include="..\E.Exceptions\E.Exceptions.csproj" />
-    <ProjectReference Include="..\E.Extensions\E.Extensions.csproj" />
   </ItemGroup>
 </Project>

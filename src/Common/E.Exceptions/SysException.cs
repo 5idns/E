@@ -1,11 +1,13 @@
 ﻿using System;
-using E.Enumeration;
+using E.Common.Enumeration;
 
 namespace E.Exceptions
 {
     public class SysException : Exception
     {
-        public ulong StatusCode { get; set; }
+        public Status Status { get; set; }
+
+        public ulong StatusCode => (ulong)Status;
 
         public SysException(ulong status = 0) : this(status, default)
         {
@@ -16,7 +18,7 @@ namespace E.Exceptions
 
         public SysException(ulong status = 0, string message = default, Exception innerException = null) : base(message, innerException)
         {
-            StatusCode = status;
+            Status = (Status)status;
         }
 
         public SysException(Status status = Status.Unknown) : this(status, default)
@@ -28,7 +30,7 @@ namespace E.Exceptions
 
         public SysException(Status status = Status.Unknown, string message = default, Exception innerException = null) : base(message, innerException)
         {
-            StatusCode = (ulong)status;
+            Status = status;
         }
     }
 }

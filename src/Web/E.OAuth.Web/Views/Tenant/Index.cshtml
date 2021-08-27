@@ -1,0 +1,282 @@
+﻿@{
+    ViewData["Title"] = "租户列表";
+}
+<div class="col-12">
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-vcenter table-mobile-md card-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>名称</th>
+                        <th>标识</th>
+                        <th>状态</th>
+                        <th>创建时间</th>
+                        <th class="w-1"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-label="Name">
+                            <div class="d-flex py-1 align-items-center">
+                                <span class="avatar me-2" style="background-image: url(./static/avatars/010m.jpg)"></span>
+                                <div class="flex-fill">
+                                    <div class="font-weight-medium">Thatcher Keel</div>
+                                    <div class="text-muted"><a href="#" class="text-reset">tkeelf@blogger.com</a></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td data-label="Title">
+                            <div>VP Sales</div>
+                            <div class="text-muted">Business Development</div>
+                        </td>
+                        <td class="text-muted" data-label="Role">
+                            User
+                        </td>
+                        <td class="text-muted" data-label="Role">
+                            User
+                        </td>
+                        <td class="text-muted" data-label="Role">
+                            User
+                        </td>
+                        <td>
+                            <div class="btn-list flex-nowrap">
+                                <a href="#" class="btn btn-white">
+                                    Edit
+                                </a>
+                                <div class="dropdown">
+                                    <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">
+                                        Actions
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <a class="dropdown-item" href="#">
+                                            Action
+                                        </a>
+                                        <a class="dropdown-item" href="#">
+                                            Another action
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal modal-blur fade" id="modal-NewTenant" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">新建租户</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="newTenantForm" asp-formhelper="true" asp-controller="Tenant" asp-action="InsertOrUpdate" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label">名称</label>
+                        <input id="name" type="text" class="form-control" name="name" placeholder="租户的友好名称">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
+                    取消
+                </a>
+                <a href="#" class="btn btn-primary ms-auto" data-bs-dismiss="modal">
+                    <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    创建新租户
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+@section Styles
+{
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/lib/datatables/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/lib/daterangepicker/daterangepicker.min.css">
+}
+@section PageButton
+{
+    <div class="btn-list">
+        <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-NewTenant">
+            <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            创建新租户
+        </a>
+    </div>
+}
+@section Scripts
+{
+    <!-- DataTables -->
+    <script src="~/lib/datatables/js/jquery.dataTables.js"></script>
+    <script src="~/lib/datatables/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/lib/daterangepicker/moment.min.js"></script>
+    <script src="~/lib/daterangepicker/daterangepicker.min.js"></script>
+
+    <script>
+        $(function() {
+            var dateRange = $(".daterange input").DateRange();
+            var dataTable = $(".table").DataTable(
+                {
+                    "processing": true,
+                    "serverSide": true,
+                    "pageLength": 20,
+                    "searching": false,
+                    "lengthChange": false,
+                    "lengthMenu": [],
+                    "ajax": {
+                        "url": "@Url.Action("Tenants")",
+                        "type": "POST",
+                        "data":
+                            function(data) {
+                                data.length = 20;
+                                data.page = (data.start / data.length);
+                            },
+                        //dataSrc: 'Rows',
+                        dataFilter: function(data) {
+                            /*var json = jQuery.parseJSON(data);
+                            json.recordsTotal = json.Total;
+                            json.recordsFiltered = json.Total;
+                            json.data = json.Rows;
+                            return JSON.stringify(json); // return JSON string
+                            */
+                            return data;
+                        }
+                    },
+                    "columns": [
+                        {
+                            data: "id",
+                            orderable: false
+                        },
+                        {
+                            data: "name",
+                            orderable: false
+                        },
+                        {
+                            data: "identity",
+                            orderable: false
+                        },
+                        {
+                            data: "isEnable",
+                            render: function(data, type, row, meta) {
+                                var text = data ? "启用" : "禁用";
+                                return text;
+                            },
+                            orderable: false
+                        },
+                        {
+                            data: "createTime",
+                            render: function(data, type, row, meta) {
+                                return formatDateTime(data);
+                            },
+                            orderable: false
+                        },
+                        {
+                            className: "details-control",
+                            orderable: false,
+                            data: null,
+                            defaultContent: '<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="19" r="1"></circle><circle cx="12" cy="5" r="1"></circle></svg>'
+                        }
+                    ]
+                });
+
+            /* Formatting function for row details - modify as you need */
+            function format(data) {
+
+                var text = '<div class="span12">';
+                text += '<blockquote>';
+                text += data.AntecodeTxt;
+                text += '</blockquote>';
+                text += '<dl>';
+                text += '<dt>开奖号码</dt>';
+                text += '<dd>';
+                text += data.BonusCode;
+                text += '</dd>';
+                if (!isEmpty(data.Winning)) {
+                    var winning = jQuery.parseJSON(data.Winning);
+                    text += '<dt>开奖信息</dt>';
+                    text += '<dd>';
+                    text += winning.BonusInfo;
+                    text += '<br />';
+                    $(winning.BonusNo).each(function(i, item) {
+                        text += "位" + item.Positions + " 号码" + item.BonusNo + " 开奖位" + item.BonusPosition + "<br/>";
+                    });
+
+                    $(winning.BonusLevel).each(function(i, item) {
+                        if (item.Count > 0) {
+                            text += "等级";
+                            text += item.Level;
+                            text += " 中奖次数";
+                            text += item.Count;
+                            text += " 是否为浮动奖金";
+                            text += item.IsFloat;
+                            text += " 是否为大奖";
+                            text += item.IsBonusBig;
+                            text += " 是否为大奖";
+                            text += item.IsBonusBig;
+                            text += " 单注奖金";
+                            text += item.Bonus;
+                            text += " 总奖金";
+                            text += item.TotalBonus;
+                            text += "<br/>";
+                        }
+                    });
+                    text += '</dd>';
+                }
+                text += '</dl></div>';
+                return text;
+            }
+
+            $('.tickets tbody').on('click',
+                'td.details-control',
+                function() {
+                    var tr = $(this).closest('tr');
+                    var row = dataTable.row(tr);
+
+                    if (row.child.isShown()) {
+                        // This row is already open - close it
+                        row.child.hide();
+                        tr.removeClass('shown');
+                    } else {
+                        // Open this row
+                        row.child(format(row.data())).show();
+                        tr.addClass('shown');
+                    }
+                });
+
+            $("#modal-NewTenant .modal-dialog .modal-content .modal-footer .btn-primary").click(function() {
+
+                var form = $("#modal-NewTenant .modal-dialog .modal-content .modal-body form");
+                var formData = new FormData(document.getElementById("newTenantForm"));
+                var modalAlert = $.ModalAlert({});
+                $.ajax({
+                    type: "post",
+                    url: form.attr("action"),
+                    async: true,
+                    processData: false,
+                    data: formData,
+                    contentType: false,
+                    dataType: "json",
+                    success: function (data) {
+                        modalAlert.ShowSuccess({
+                            'Title': '修改租户信息成功',
+                            'Text': ''
+                        });
+                        dataTable.ajax.reload();
+                    },
+                    error: function(xhr) {
+                        console.log(xhr);
+                        modalAlert.ShowSuccess({
+                            'Title': '修改租户信息失败',
+                            'Text': xhr.message
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

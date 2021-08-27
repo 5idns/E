@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using E.Entities;
-using E.Enumeration;
+using E.Common.Entities;
+using E.Common.Enumeration;
 using E.Exceptions;
 
 namespace E.Repository

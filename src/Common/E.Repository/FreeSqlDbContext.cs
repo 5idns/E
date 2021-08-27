@@ -8,18 +8,22 @@ using Microsoft.Extensions.Configuration;
 
 namespace E.Repository
 {
-    public abstract class FreeSqlDbContext
+    public abstract class FreeSqlDbContext:DbContext
     {
-        protected FreeSqlDbContext(IConfiguration configuration)
+        protected FreeSqlDbContext(IConfiguration configuration,Action<FreeSqlBuilder> builder = null)
         {
             var dbOptions = configuration.Get<DbOptions>();
 
             IFreeSql CreateFreeSql()
             {
-                var newFreeSql = new FreeSqlBuilder()
-                    .UseConnectionString(dbOptions.DataType, dbOptions.ConnectionString)
-                    .UseAutoSyncStructure(true)
-                    .Build();
+                var freeSqlBuilder = new FreeSqlBuilder()
+                    .UseConnectionString(dbOptions.DataType, dbOptions.ConnectionString);
+                if (builder != null)
+                {
+                    builder(freeSqlBuilder);
+                }
+
+                var newFreeSql = freeSqlBuilder.Build();
                 newFreeSql.UseJsonMap();
                 return newFreeSql;
             }
@@ -30,6 +34,16 @@ namespace E.Repository
         protected FreeSqlDbContext(IFreeSql freeSql)
         {
             DbContext = freeSql;
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder builder)
+        {
+            builder.UseFreeSql(DbContext);
+        }
+
+        protected override void OnModelCreating(ICodeFirst codefirst)
+        {
+
         }
 
         public IFreeSql DbContext { get; }

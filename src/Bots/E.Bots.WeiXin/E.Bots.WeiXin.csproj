@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Senparc.Weixin.Work" Version="3.9.600" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Tenant\E.Tenant\E.Tenant.csproj" />
+    <ProjectReference Include="..\E.Bots\E.Bots.csproj" />
+  </ItemGroup>
+
+</Project>

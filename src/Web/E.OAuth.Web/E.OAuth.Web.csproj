@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
+    <UserSecretsId>0e29265c-8d39-40ef-b7a5-489fd55aee8f</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FreeSql.Provider.MySql" Version="2.5.200" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.9" />
+    <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.113" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Business\E.Business.System\E.Business.System.csproj" />
+    <ProjectReference Include="..\..\Common\E.Extensions\E.Extensions.csproj" />
+    <ProjectReference Include="..\..\Common\E.Repository\E.Repository.csproj" />
+    <ProjectReference Include="..\..\Tenant\E.Tenant.Web\E.Tenant.Web.csproj" />
+  </ItemGroup>
+
+</Project>

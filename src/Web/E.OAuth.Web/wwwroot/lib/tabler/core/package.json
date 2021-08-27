@@ -1,0 +1,112 @@
+{
+  "name": "@tabler/core",
+  "version": "1.0.0-beta2",
+  "description": "Premium and Open Source dashboard template with responsive and high quality UI.",
+  "scripts": {
+    "start": "gulp start",
+    "build": "gulp build",
+    "preview": "gulp build --preview",
+    "svg-optimize": "svgo -f svg/brand --pretty",
+    "unused-files": "node build/unused-files.js",
+    "release": "release-it",
+    "svg-icons": "gulp svg-icons",
+    "percy": "gulp build && npx percy snapshot demo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tabler/tabler.git"
+  },
+  "keywords": [
+    "css",
+    "sass",
+    "mobile-first",
+    "responsive",
+    "front-end",
+    "framework",
+    "web"
+  ],
+  "author": "codecalm",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tabler/tabler/issues"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/codecalm"
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "files": [
+    "dist/**/*",
+    "src/js/**/*.{js,map}",
+    "src/img/**/*.{svg}",
+    "src/scss/**/*.scss"
+  ],
+  "style": "dist/css/tabler.css",
+  "sass": "src/scss/tabler.scss",
+  "main": "dist/js/tabler.js",
+  "homepage": "https://tabler.io",
+  "devDependencies": {
+    "@babel/core": "^7.13.10",
+    "@babel/preset-env": "^7.13.10",
+    "@rollup/plugin-commonjs": "^17.1.0",
+    "@rollup/plugin-node-resolve": "^11.2.0",
+    "@rollup/plugin-replace": "^2.4.1",
+    "@rollup/stream": "^2.0.0",
+    "autoprefixer": "^10.2.5",
+    "browser-sync": "^2.26.14",
+    "critical": "^3.0.0",
+    "cross-spawn": "^7.0.3",
+    "gulp": "^4.0.2",
+    "gulp-clean": "^0.4.0",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-debug": "^4.0.0",
+    "gulp-header": "^2.0.9",
+    "gulp-minify": "^3.1.0",
+    "gulp-postcss": "^9.0.0",
+    "gulp-purgecss": "^4.0.2",
+    "gulp-rename": "^2.0.0",
+    "gulp-rtlcss": "^1.4.1",
+    "gulp-sass": "^4.1.0",
+    "postcss": "^8.2.8",
+    "release-it": "^14.4.1",
+    "rollup": "^2.41.2",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-cleanup": "^3.2.1",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0",
+    "yaml": "^1.10.1",
+    "yargs": "^16.2.0"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.9.1",
+    "@tabler/icons": "^1.39.1",
+    "apexcharts": "^3.25.0",
+    "autosize": "^4.0.2",
+    "bootstrap": "twbs/bootstrap#232e392c9126fcb1dbe13c963e7edcdbd62cfeb8",
+    "choices.js": "^9.0.1",
+    "countup.js": "^2.0.7",
+    "flatpickr": "^4.6.9",
+    "imask": "^6.0.7",
+    "litepicker": "^2.0.11",
+    "nouislider": "^14.6.3"
+  },
+  "resolutions": {
+    "**/**/node-gyp": "^5.0.0"
+  },
+  "release-it": {
+    "hooks": {
+      "after:bump": "gulp build --latest-version ${latestVersion} --new-version ${version} && gulp build-demo",
+      "after:release": "echo Successfully released ${name} v${latestVersion} to ${repo.repository}."
+    },
+    "git": {
+      "requireCleanWorkingDir": false,
+      "addUntrackedFiles": true,
+      "tagName": "v${version}"
+    },
+    "github": {
+      "release": true
+    }
+  }
+}

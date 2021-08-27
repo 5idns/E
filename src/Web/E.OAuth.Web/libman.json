@@ -1,0 +1,19 @@
+{
+  "version": "1.0",
+  "defaultProvider": "jsdelivr",
+  "libraries": [
+    {
+      "library": "@tabler/core@1.0.0-beta2",
+      "destination": "wwwroot/lib/tabler/core/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "datatables@1.10.21",
+      "destination": "wwwroot/lib/datatables/"
+    },
+    {
+      "library": "daterangepicker@3.1.0",
+      "destination": "wwwroot/lib/daterangepicker/"
+    }
+  ]
+}

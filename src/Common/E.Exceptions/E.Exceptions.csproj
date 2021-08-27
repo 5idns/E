@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <ProjectReference Include="..\E.Common\E.Common.csproj" />
     <ProjectReference Include="..\E.Enumeration\E.Enumeration.csproj" />
   </ItemGroup>
 </Project>

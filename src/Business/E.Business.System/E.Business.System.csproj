@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\E.Entities\E.Entities.csproj" />
+    <ProjectReference Include="..\..\Common\E.Repository\E.Repository.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,5 +1,4 @@
 ﻿using FreeSql;
-using Microsoft.Extensions.Options;
 
 namespace E.Repository.Configurations
 {
