@@ -7,21 +7,22 @@ using E.Exceptions;
 
 namespace E.Repository
 {
-    public abstract class PageTableRepository<TDbContext, TEntity> : CommonRepository<TDbContext, TEntity>
-        where TDbContext : FreeSqlDbContext
-        where TEntity : class
+    public abstract class PageTableRepository
     {
-        protected PageTableRepository(TDbContext context) : base(context)
+        private readonly FreeSqlDbContext _context;
+        protected PageTableRepository(FreeSqlDbContext context)
         {
+            _context = context;
         }
 
-        public TableData<TEntity> GetPage<TMember>(
-            Expression<Func<TEntity, bool>> exp,
-            Expression<Func<TEntity, TMember>> column,
+        public TableData<TEntity> GetPage<TEntity, TMember>(
+            Expression<Func<TEntity, bool>> whereExpression,
+            Expression<Func<TEntity, TMember>> orderColumn,
             bool descending = false,
             int start = 0,
             int length = 10
         )
+        where TEntity : class
         {
             try
             {
@@ -35,17 +36,10 @@ namespace E.Repository
                     length = 10;
                 }
 
-                var select = Where(exp);
-                if (column != null)
+                var select = _context.DbContext.Select<TEntity>().Where(whereExpression);
+                if (orderColumn != null)
                 {
-                    if (descending)
-                    {
-                        select = select.OrderByDescending(column);
-                    }
-                    else
-                    {
-                        select = select.OrderBy(column);
-                    }
+                    select = descending ? select.OrderByDescending(orderColumn) : select.OrderBy(orderColumn);
                 }
 
                 var dataList = select.Skip(start).Take(length).ToList();
@@ -59,13 +53,14 @@ namespace E.Repository
             }
         }
 
-        public async Task<TableData<TEntity>> GetPageAsync<TMember>(
-            Expression<Func<TEntity, bool>> exp,
-            Expression<Func<TEntity, TMember>> column,
+        public async Task<TableData<TEntity>> GetPageAsync<TEntity, TMember>(
+            Expression<Func<TEntity, bool>> whereExpression,
+            Expression<Func<TEntity, TMember>> orderColumn,
             bool descending = false,
             int start = 0,
             int length = 10
         )
+        where TEntity : class
         {
             try
             {
@@ -79,17 +74,10 @@ namespace E.Repository
                     length = 10;
                 }
 
-                var select = Where(exp);
-                if (column != null)
+                var select = _context.DbContext.Select<TEntity>().Where(whereExpression);
+                if (orderColumn != null)
                 {
-                    if (descending)
-                    {
-                        select = select.OrderByDescending(column);
-                    }
-                    else
-                    {
-                        select = select.OrderBy(column);
-                    }
+                    select = descending ? select.OrderByDescending(orderColumn) : select.OrderBy(orderColumn);
                 }
 
                 var dataList = await select.Skip(start).Take(length).ToListAsync();
@@ -101,6 +89,16 @@ namespace E.Repository
             {
                 throw new SysException(Status.DatabaseError, "加载数据时发生错误", e);
             }
+        }
+    }
+
+    public abstract class PageTableRepository<TDbContext>:PageTableRepository
+        where TDbContext : FreeSqlDbContext
+    {
+        private readonly TDbContext _context;
+        protected PageTableRepository(TDbContext context) : base(context)
+        {
+            _context = context;
         }
     }
 }
